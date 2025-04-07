@@ -14,7 +14,7 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 # Development stage
-FROM node:20-alpine
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
@@ -35,4 +35,4 @@ COPY . .
 EXPOSE 4200
 
 # Start development server with host 0.0.0.0 to allow external connections
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--poll", "500"] 
+CMD ["ng", "serve", "--host", "0.0.0.0", "--disable-host-check", "--poll", "500"]
