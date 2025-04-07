@@ -1,0 +1,63 @@
+<mat-card class="property-card" [class.horizontal]="horizontal">
+  <div class="property-image-container">
+    <img *ngIf="property.images?.length" [src]="property.images[0]" alt="{{ property.title }}" class="property-image">
+    <img *ngIf="!property.images?.length" src="assets/images/placeholder-property.jpg" alt="Image non disponible" class="property-image">
+    <div class="property-badges">
+      <span *ngIf="property.verified" class="verified-badge" matTooltip="Vérifié par Settly">
+        <mat-icon>verified</mat-icon>
+      </span>
+      <span *ngIf="isSaved" class="saved-badge" matTooltip="Ajouté aux favoris">
+        <mat-icon>favorite</mat-icon>
+      </span>
+    </div>
+    <div class="property-price">
+      {{ property.price | currency:'EUR':'symbol':'1.0-0' }}<span class="price-unit">/{{ getPriceUnitLabel(property.priceUnit) }}</span>
+    </div>
+  </div>
+
+  <mat-card-content class="property-content">
+    <div class="property-header">
+      <h2 class="property-title" [matTooltip]="property.title">{{ property.title }}</h2>
+      <p class="property-location">
+        <mat-icon class="location-icon">location_on</mat-icon>
+        {{ property.location.neighborhood }}, {{ property.location.city }}
+      </p>
+    </div>
+
+    <div class="property-details">
+      <div class="detail-item">
+        <mat-icon>straighten</mat-icon>
+        <span>{{ property.size }} m²</span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>hotel</mat-icon>
+        <span>{{ property.rooms }} pièce{{ property.rooms > 1 ? 's' : '' }}</span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>bathtub</mat-icon>
+        <span>{{ property.bathrooms }} SdB</span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>event_available</mat-icon>
+        <span>Dès le {{ property.availableFrom | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+
+    <div class="property-features" *ngIf="property.features?.length">
+      <mat-chip-set>
+        <mat-chip *ngFor="let feature of displayedFeatures" disableRipple>{{ feature }}</mat-chip>
+        <mat-chip *ngIf="property.features.length > 3" class="more-features" disableRipple matTooltip="{{ remainingFeatures.join(', ') }}">+{{ property.features.length - 3 }}</mat-chip>
+      </mat-chip-set>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="property-actions">
+    <button mat-stroked-button color="primary" (click)="viewDetails($event)">Voir le détail</button>
+    <button mat-icon-button (click)="toggleSave($event)" [color]="isSaved ? 'accent' : ''" aria-label="Ajouter aux favoris">
+      <mat-icon>{{ isSaved ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+    <button mat-icon-button (click)="share($event)" aria-label="Partager">
+      <mat-icon>share</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

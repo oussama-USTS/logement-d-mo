@@ -1,0 +1,79 @@
+<div class="property-grid-container">
+  <div class="grid-header" *ngIf="showHeader">
+    <div class="grid-info">
+      <h2 class="grid-title" *ngIf="title">{{ title }}</h2>
+      <p class="results-count" *ngIf="totalProperties !== undefined">
+        {{ totalProperties }} logement{{ totalProperties !== 1 ? 's' : '' }} trouvé{{ totalProperties !== 1 ? 's' : '' }}
+      </p>
+    </div>
+    <div class="grid-actions">
+      <mat-button-toggle-group [value]="viewMode" (change)="changeViewMode($event)" aria-label="Mode d'affichage">
+        <mat-button-toggle value="grid" aria-label="Vue grille">
+          <mat-icon>grid_view</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="list" aria-label="Vue liste">
+          <mat-icon>view_list</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-form-field appearance="outline" class="sort-select">
+        <mat-label>Trier par</mat-label>
+        <mat-select [value]="sortBy" (selectionChange)="changeSortOrder($event)">
+          <mat-option value="price_asc">Prix (croissant)</mat-option>
+          <mat-option value="price_desc">Prix (décroissant)</mat-option>
+          <mat-option value="date_desc">Plus récent</mat-option>
+          <mat-option value="date_asc">Plus ancien</mat-option>
+          <mat-option value="size_desc">Surface (décroissant)</mat-option>
+          <mat-option value="size_asc">Surface (croissant)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Chargement des logements...</p>
+  </div>
+
+  <!-- No results message -->
+  <div class="no-results" *ngIf="!loading && properties && properties.length === 0">
+    <mat-icon>search_off</mat-icon>
+    <h3>Aucun logement trouvé</h3>
+    <p>Essayez de modifier vos critères de recherche pour trouver plus de résultats.</p>
+  </div>
+
+  <!-- Grid view -->
+  <div class="property-grid" *ngIf="!loading && properties && properties.length > 0 && viewMode === 'grid'">
+    <div class="property-card-wrapper" *ngFor="let property of properties">
+      <app-property-card 
+        [property]="property" 
+        (saved)="onPropertySaved($event)" 
+        (unsaved)="onPropertyUnsaved($event)"
+        (clicked)="onPropertyClicked($event)">
+      </app-property-card>
+    </div>
+  </div>
+
+  <!-- List view -->
+  <div class="property-list" *ngIf="!loading && properties && properties.length > 0 && viewMode === 'list'">
+    <div class="property-list-item" *ngFor="let property of properties">
+      <app-property-card 
+        [property]="property" 
+        [horizontal]="true"
+        (saved)="onPropertySaved($event)" 
+        (unsaved)="onPropertyUnsaved($event)"
+        (clicked)="onPropertyClicked($event)">
+      </app-property-card>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <mat-paginator *ngIf="showPagination && totalProperties && totalProperties > pageSize" 
+                [length]="totalProperties"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="[6, 12, 24, 48]"
+                [pageIndex]="currentPage"
+                (page)="onPageChange($event)"
+                aria-label="Sélectionner la page">
+  </mat-paginator>
+</div> 

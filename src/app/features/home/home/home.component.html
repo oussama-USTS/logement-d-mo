@@ -1,0 +1,309 @@
+<div class="home-container">
+  <!-- Section Hero avec recherche -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Trouvez votre nouveau <span>chez-vous</span></h1>
+      <p class="hero-subtitle">Notre plateforme vous offre un accès à des milliers de logements soigneusement sélectionnés partout en France. Que vous recherchiez un appartement, une maison ou un studio, nous avons ce qu'il vous faut.</p>
+      
+      <div class="search-box">
+        <mat-form-field appearance="outline" class="search-input">
+          <mat-label>Où souhaitez-vous habiter?</mat-label>
+          <input matInput [(ngModel)]="searchQuery" placeholder="Ville, quartier..." (keyup.enter)="search()">
+          <mat-icon matSuffix>location_on</mat-icon>
+        </mat-form-field>
+        <button mat-raised-button color="primary" class="search-button" (click)="search()">
+          <mat-icon>search</mat-icon>
+          Rechercher
+        </button>
+      </div>
+      
+      <div class="popular-locations">
+        <span class="popular-label">Destinations populaires:</span>
+        <div class="location-chips">
+          <span *ngFor="let city of cities" class="location-chip" (click)="navigateToSearch({location: city})">
+            {{ city }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Indicateur de défilement -->
+      <div class="scroll-down">
+        <span class="text">Découvrir plus</span>
+        <mat-icon class="icon">keyboard_arrow_down</mat-icon>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Statistiques -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-item">
+        <mat-icon class="stat-icon">home</mat-icon>
+        <div class="stat-number">5,000+</div>
+        <div class="stat-label">Logements disponibles</div>
+      </div>
+      <div class="stat-item">
+        <mat-icon class="stat-icon">people</mat-icon>
+        <div class="stat-number">10,000+</div>
+        <div class="stat-label">Clients satisfaits</div>
+      </div>
+      <div class="stat-item">
+        <mat-icon class="stat-icon">location_city</mat-icon>
+        <div class="stat-number">150+</div>
+        <div class="stat-label">Villes couvertes</div>
+      </div>
+      <div class="stat-item">
+        <mat-icon class="stat-icon">star</mat-icon>
+        <div class="stat-number">4.8</div>
+        <div class="stat-label">Note moyenne</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Types de Propriétés -->
+  <section class="property-types-section">
+    <div class="section-header">
+      <h2>Quel type de logement recherchez-vous?</h2>
+      <p>Nous proposons une large gamme de propriétés pour répondre à tous vos besoins, que vous soyez étudiant, jeune actif, famille ou investisseur.</p>
+    </div>
+    
+    <div class="property-types-grid">
+      <mat-card class="property-type-card" *ngFor="let type of propertyTypes" (click)="navigateToSearch({propertyTypes: [type]})">
+        <mat-icon class="property-type-icon">
+          {{ type === 'Appartement' ? 'apartment' : 
+             type === 'Maison' ? 'home' : 
+             type === 'Studio' ? 'weekend' : 
+             type === 'Loft' ? 'business' : 'villa' }}
+        </mat-icon>
+        <h3>{{ type }}</h3>
+        <span class="explore-link">Explorer <mat-icon>arrow_forward</mat-icon></span>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Section Propriétés en Vedette -->
+  <section class="featured-properties-section">
+    <div class="section-header">
+      <h2>Propriétés en vedette</h2>
+      <p>Découvrez notre sélection des meilleures offres du moment, choisies pour leur rapport qualité-prix exceptionnel et leur emplacement idéal.</p>
+      <a mat-button color="primary" (click)="navigateToSearch({})" class="view-all-link">
+        Voir toutes les propriétés
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </div>
+    
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+    
+    <div *ngIf="!loading" class="properties-grid">
+      <!-- Propriétés en vedette -->
+      <mat-card class="property-card" *ngFor="let property of featuredProperties" (click)="navigateToSearch({id: property.id})">
+        <div class="property-image" [style.background-image]="'url(' + property.image + ')'">
+          <div class="property-price">{{ property.price }} €/mois</div>
+          <div class="property-badge">{{ property.type }}</div>
+        </div>
+        <mat-card-content>
+          <h3 class="property-title">{{ property.title }}</h3>
+          <p class="property-location">
+            <mat-icon>location_on</mat-icon>
+            {{ property.location.neighborhood }}, {{ property.location.city }}
+          </p>
+          <div class="property-details">
+            <span class="property-detail">
+              <mat-icon>home</mat-icon> {{ property.type }}
+            </span>
+            <span class="property-detail">
+              <mat-icon>straighten</mat-icon> {{ property.size }} m²
+            </span>
+            <span class="property-detail">
+              <mat-icon>hotel</mat-icon> {{ property.rooms }} pièces
+            </span>
+          </div>
+          <div class="property-features">
+            <mat-chip *ngFor="let feature of property.features.slice(0, 3)">{{ feature }}</mat-chip>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-icon-button class="icon-button" matTooltip="Ajouter aux favoris" (click)="addToFavorites(property.id, $event)">
+            <mat-icon>favorite_border</mat-icon>
+          </button>
+          <button mat-flat-button class="detail-button">Voir détails</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+  
+  <!-- Section Services -->
+  <section class="services-section">
+    <div class="section-header">
+      <h2>Nos services sur mesure</h2>
+      <p>Bénéficiez d'un accompagnement personnalisé tout au long de votre recherche de logement ou dans la gestion de vos biens immobiliers.</p>
+    </div>
+    
+    <div class="services-grid">
+      <mat-card class="service-card">
+        <mat-icon class="service-icon">search</mat-icon>
+        <h3>Recherche intelligente</h3>
+        <p>Notre algorithme avancé analyse vos préférences pour vous proposer uniquement les logements qui correspondent parfaitement à vos critères.</p>
+      </mat-card>
+      
+      <mat-card class="service-card">
+        <mat-icon class="service-icon">verified_user</mat-icon>
+        <h3>Annonces vérifiées</h3>
+        <p>Chaque annonce est soigneusement vérifiée par notre équipe d'experts pour vous garantir des informations fiables et actualisées.</p>
+      </mat-card>
+      
+      <mat-card class="service-card">
+        <mat-icon class="service-icon">support_agent</mat-icon>
+        <h3>Assistance 24/7</h3>
+        <p>Notre équipe de conseillers est disponible à tout moment pour répondre à vos questions et vous accompagner dans vos démarches.</p>
+      </mat-card>
+      
+      <mat-card class="service-card">
+        <mat-icon class="service-icon">description</mat-icon>
+        <h3>Gestion simplifiée</h3>
+        <p>Propriétaires, notre plateforme vous permet de gérer facilement vos biens, de trouver des locataires qualifiés et de suivre vos revenus.</p>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Section Témoignages -->
+  <section class="testimonials-section">
+    <div class="section-header">
+      <h2>Ce que disent nos clients</h2>
+      <p>Découvrez les expériences de nos utilisateurs satisfaits qui ont trouvé leur logement idéal grâce à notre plateforme.</p>
+    </div>
+    
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-content">
+          "J'ai trouvé mon appartement parfait en moins d'une semaine grâce à cette plateforme incroyable. L'interface est intuitive et les filtres de recherche sont précis. Je recommande vivement !"
+        </p>
+        <div class="testimonial-user">
+          <div class="user-avatar" style="background-image: url('https://randomuser.me/api/portraits/women/44.jpg');"></div>
+          <div class="user-info">
+            <h4>Sophie Martin</h4>
+            <p>Paris, France</p>
+          </div>
+          <div class="rating">
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <p class="testimonial-content">
+          "En tant que propriétaire, j'ai pu louer mon appartement en un temps record. Le processus de mise en ligne est simple et l'équipe d'assistance est très réactive. Un service premium !"
+        </p>
+        <div class="testimonial-user">
+          <div class="user-avatar" style="background-image: url('https://randomuser.me/api/portraits/men/32.jpg');"></div>
+          <div class="user-info">
+            <h4>Thomas Dubois</h4>
+            <p>Lyon, France</p>
+          </div>
+          <div class="rating">
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <p class="testimonial-content">
+          "J'étais stressée à l'idée de chercher un logement dans une nouvelle ville, mais cette plateforme a rendu tout le processus agréable. Les photos HD et les visites virtuelles m'ont permis de faire un choix en toute confiance."
+        </p>
+        <div class="testimonial-user">
+          <div class="user-avatar" style="background-image: url('https://randomuser.me/api/portraits/women/68.jpg');"></div>
+          <div class="user-info">
+            <h4>Camille Leroy</h4>
+            <p>Bordeaux, France</p>
+          </div>
+          <div class="rating">
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star</mat-icon>
+            <mat-icon>star_half</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Application Mobile -->
+  <section class="app-section">
+    <div class="app-container">
+      <div class="app-content">
+        <h2>Téléchargez notre application mobile</h2>
+        <p>Gardez votre recherche de logement à portée de main. Notre application vous permet de recevoir des alertes en temps réel et de programmer des visites où que vous soyez.</p>
+        
+        <div class="app-features">
+          <div class="feature-item">
+            <mat-icon>notifications_active</mat-icon>
+            <p>Recevez des alertes personnalisées en temps réel</p>
+          </div>
+          <div class="feature-item">
+            <mat-icon>calendar_today</mat-icon>
+            <p>Planifiez vos visites directement depuis l'application</p>
+          </div>
+          <div class="feature-item">
+            <mat-icon>compare_arrows</mat-icon>
+            <p>Comparez facilement les propriétés qui vous intéressent</p>
+          </div>
+        </div>
+        
+        <div class="app-buttons">
+          <a href="#" class="app-button">
+            <mat-icon>android</mat-icon>
+            <div class="button-text">
+              <div class="small-text">Disponible sur</div>
+              <div class="big-text">Google Play</div>
+            </div>
+          </a>
+          <a href="#" class="app-button">
+            <mat-icon>apple</mat-icon>
+            <div class="button-text">
+              <div class="small-text">Télécharger sur</div>
+              <div class="big-text">App Store</div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="app-image">
+        <img src="https://i.imgur.com/8VROI12.png" alt="Application mobile">
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Newsletter -->
+  <section class="newsletter-section">
+    <div class="newsletter-container">
+      <h2>Restez informé</h2>
+      <p>Inscrivez-vous à notre newsletter pour recevoir les dernières annonces et offres spéciales</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Votre adresse email" class="email-input" [(ngModel)]="emailSubscription">
+        <button class="subscribe-button" (click)="subscribeToNewsletter()">S'abonner</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Section CTA -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Vous êtes propriétaire ?</h2>
+      <p>Mettez votre bien en location en quelques minutes et trouvez rapidement des locataires qualifiés grâce à notre plateforme. Notre équipe d'experts vous accompagne à chaque étape du processus.</p>
+      <button mat-raised-button color="accent" class="cta-button" (click)="navigateToSearch({type: 'owner'})">
+        Déposer une annonce
+      </button>
+    </div>
+  </section>
+</div>

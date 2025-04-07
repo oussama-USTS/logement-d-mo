@@ -1,0 +1,128 @@
+<div class="filter-panel-container">
+  <form [formGroup]="filterForm">
+    <div class="filter-header">
+      <h2 class="filter-title">Filtrer les logements</h2>
+      <button type="button" mat-stroked-button color="warn" class="clear-button" (click)="clearFilters()" [disabled]="!hasActiveFilters">
+        <mat-icon>clear</mat-icon>
+        Réinitialiser
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Location filter -->
+    <div class="filter-section">
+      <h3 class="section-title">Localisation</h3>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ville ou quartier</mat-label>
+        <input matInput placeholder="Ex: Paris, Lyon, Bordeaux" formControlName="location">
+        <mat-icon matSuffix>location_on</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Price range filter -->
+    <div class="filter-section">
+      <h3 class="section-title">Budget</h3>
+      <div class="price-inputs">
+        <mat-form-field appearance="outline">
+          <mat-label>Min €</mat-label>
+          <input matInput type="number" placeholder="Min" formControlName="priceMin">
+        </mat-form-field>
+        <span class="separator">-</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Max €</mat-label>
+          <input matInput type="number" placeholder="Max" formControlName="priceMax">
+        </mat-form-field>
+      </div>
+      <mat-slider min="0" max="5000" step="50" class="full-width">
+        <input matSliderStartThumb formControlName="priceMin">
+        <input matSliderEndThumb formControlName="priceMax">
+      </mat-slider>
+    </div>
+
+    <!-- Surface range filter -->
+    <div class="filter-section">
+      <h3 class="section-title">Surface</h3>
+      <div class="surface-inputs">
+        <mat-form-field appearance="outline">
+          <mat-label>Min m²</mat-label>
+          <input matInput type="number" placeholder="Min" formControlName="sizeMin">
+        </mat-form-field>
+        <span class="separator">-</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Max m²</mat-label>
+          <input matInput type="number" placeholder="Max" formControlName="sizeMax">
+        </mat-form-field>
+      </div>
+      <mat-slider min="0" max="300" step="5" class="full-width">
+        <input matSliderStartThumb formControlName="sizeMin">
+        <input matSliderEndThumb formControlName="sizeMax">
+      </mat-slider>
+    </div>
+
+    <!-- Rooms filter -->
+    <div class="filter-section">
+      <h3 class="section-title">Pièces</h3>
+      <div class="room-chips">
+        <mat-chip-option *ngFor="let roomValue of roomOptions" 
+                    [selected]="isRoomSelected(roomValue)"
+                    (selectionChange)="toggleRoomFilter($event, roomValue)">
+          {{ roomValue === 1 ? 'Studio' : roomValue + ' pièces' }}
+        </mat-chip-option>
+      </div>
+    </div>
+
+    <!-- Property type filter -->
+    <div class="filter-section">
+      <h3 class="section-title">Type de bien</h3>
+      <div class="property-types">
+        <mat-checkbox *ngFor="let type of propertyTypes" 
+                    [checked]="selectedPropertyTypes.includes(type.value)"
+                    (change)="togglePropertyType($event, type.value)"
+                    class="property-type-checkbox">
+          {{ type.label }}
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <!-- More filters -->
+    <div class="filter-section">
+      <mat-accordion>
+        <mat-expansion-panel class="filter-panel" [expanded]="expanded">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Plus de filtres
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <!-- Furnished filter -->
+          <div class="additional-filters">
+            <mat-checkbox formControlName="furnished" class="furnished-checkbox">
+              Meublé
+            </mat-checkbox>
+            
+            <!-- Availability date -->
+            <h3 class="section-title">Disponible à partir de</h3>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="availableFrom">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            
+            <!-- Features filter -->
+            <h3 class="section-title">Caractéristiques</h3>
+            <div class="features-list">
+              <mat-checkbox *ngFor="let feature of features" 
+                          [checked]="selectedFeatures.includes(feature.value)"
+                          (change)="toggleFeature($event, feature.value)"
+                          class="feature-checkbox">
+                {{ feature.label }}
+              </mat-checkbox>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+</div>

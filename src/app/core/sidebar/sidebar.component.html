@@ -1,0 +1,147 @@
+<div class="sidebar-container">
+  <div class="sidebar-header">
+    <div class="logo-section">
+      <span class="logo-text">Settly</span>
+    </div>
+    <button mat-icon-button class="close-button" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Navigation Links -->
+  <div class="sidebar-nav">
+    <ng-container *ngIf="(currentUser$ | async) as user; else guestLinks">
+      <!-- User Info -->
+      <div class="user-info">
+        <div class="user-avatar">
+          <img *ngIf="user.profileImage" [src]="user.profileImage" alt="User avatar">
+          <mat-icon *ngIf="!user.profileImage">account_circle</mat-icon>
+        </div>
+        <div class="user-details">
+          <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+          <p>{{ user.email }}</p>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Logged-in user links -->
+      <div class="nav-section">
+        <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-item" (click)="close()">
+          <mat-icon>home</mat-icon>
+          <span>Accueil</span>
+        </a>
+        <a mat-button routerLink="/dashboard" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>dashboard</mat-icon>
+          <span>Tableau de bord</span>
+        </a>
+        <a mat-button routerLink="/search" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>search</mat-icon>
+          <span>Rechercher un logement</span>
+        </a>
+        <a mat-button routerLink="/dashboard/favoris" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>favorite</mat-icon>
+          <span>Mes favoris</span>
+        </a>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <div class="nav-section">
+        <h3 class="section-title">Services</h3>
+        <a mat-button routerLink="/services" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>apps</mat-icon>
+          <span>Tous les services</span>
+        </a>
+        <a mat-button routerLink="/services/insurance" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>security</mat-icon>
+          <span>Assurance habitation</span>
+        </a>
+        <a mat-button routerLink="/services/deposit" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>account_balance_wallet</mat-icon>
+          <span>Garantie loyer</span>
+        </a>
+        <a mat-button routerLink="/services/internet" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>wifi</mat-icon>
+          <span>Internet</span>
+        </a>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <div class="nav-section">
+        <a mat-button routerLink="/dashboard/profile" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>person</mat-icon>
+          <span>Mon profil</span>
+        </a>
+        <a mat-button routerLink="/dashboard/settings" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>settings</mat-icon>
+          <span>Paramètres</span>
+        </a>
+        <button mat-button class="nav-item" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Déconnexion</span>
+        </button>
+      </div>
+    </ng-container>
+    
+    <ng-template #guestLinks>
+      <!-- Guest Links -->
+      <div class="nav-section">
+        <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-item" (click)="close()">
+          <mat-icon>home</mat-icon>
+          <span>Accueil</span>
+        </a>
+        <a mat-button routerLink="/search" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>search</mat-icon>
+          <span>Rechercher un logement</span>
+        </a>
+        <a mat-button routerLink="/services" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>apps</mat-icon>
+          <span>Nos services</span>
+        </a>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <div class="nav-section">
+        <h3 class="section-title">Découvrir Settly</h3>
+        <a mat-button routerLink="/about" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>info</mat-icon>
+          <span>À propos de nous</span>
+        </a>
+        <a mat-button routerLink="/faq" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>help</mat-icon>
+          <span>FAQ</span>
+        </a>
+        <a mat-button routerLink="/contact" routerLinkActive="active-link" class="nav-item" (click)="close()">
+          <mat-icon>mail</mat-icon>
+          <span>Contact</span>
+        </a>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <div class="auth-buttons">
+        <button mat-flat-button color="primary" class="login-button" (click)="login()">
+          Se connecter
+        </button>
+        <button mat-flat-button color="accent" class="register-button" (click)="register()">
+          S'inscrire
+        </button>
+      </div>
+    </ng-template>
+  </div>
+  
+  <!-- Footer Info -->
+  <div class="sidebar-footer">
+    <p>© {{ currentYear }} Settly, Tous droits réservés</p>
+    <div class="footer-links">
+      <a href="#" (click)="$event.preventDefault(); close()">Conditions d'utilisation</a>
+      <span class="separator">·</span>
+      <a href="#" (click)="$event.preventDefault(); close()">Confidentialité</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,160 @@
+.filter-panel-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  
+  .filter-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .clear-button {
+    font-size: 13px;
+    
+    mat-icon {
+      margin-right: 4px;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.filter-section {
+  margin: 20px 0;
+  
+  .section-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 12px;
+    color: #444;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.price-inputs, .surface-inputs {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  
+  mat-form-field {
+    flex: 1;
+  }
+  
+  .separator {
+    margin: 0 8px;
+    color: #777;
+  }
+}
+
+.room-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+  
+  mat-chip-option {
+    ::ng-deep .mdc-evolution-chip-selected:not(:disabled) {
+      background-color: #3f51b5 !important;
+      
+      .mdc-evolution-chip__text-label {
+        color: white !important;
+      }
+    }
+  }
+}
+
+.property-types {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+  
+  .property-type-checkbox {
+    margin-left: 0;
+  }
+}
+
+.additional-filters {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  
+  .furnished-checkbox {
+    margin-bottom: 16px;
+  }
+  
+  .features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    
+    .feature-checkbox {
+      margin-left: 0;
+    }
+  }
+}
+
+.filter-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  
+  .apply-button {
+    width: 100%;
+    padding: 8px 16px;
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Customize Material filter panel styles
+::ng-deep .filter-panel {
+  .mat-expansion-panel-header {
+    padding: 0 8px;
+    height: 48px;
+  }
+  
+  .mat-expansion-panel-body {
+    padding: 16px 8px 8px;
+  }
+}
+
+// Make input fields more compact
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 0.6em 0;
+}
+
+// Customize sliders
+::ng-deep .mat-slider {
+  margin: 8px 0 16px;
+}
+
+// Add responsive adjustments
+@media (max-width: 768px) {
+  .features-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

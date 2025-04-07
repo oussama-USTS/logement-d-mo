@@ -1,0 +1,103 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <div class="header-container">
+    <div class="header-left">
+      <button mat-icon-button class="menu-button" (click)="toggleSideNav()" aria-label="Menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      
+      <a routerLink="/" class="logo-container">
+        <span class="logo-text logo-text-custom">Settly</span>
+      </a>
+      
+      <div class="nav-links">
+        <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Accueil</a>
+        <a mat-button routerLink="/search" routerLinkActive="active-link">Rechercher</a>
+        <a mat-button routerLink="/services" routerLinkActive="active-link">Services</a>
+        <a mat-button href="#" [matMenuTriggerFor]="helpMenu">Aide <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <mat-menu #helpMenu="matMenu">
+          <a mat-menu-item routerLink="/faq">FAQ</a>
+          <a mat-menu-item routerLink="/contact">Contact</a>
+          <a mat-menu-item routerLink="/guides">Guides</a>
+        </mat-menu>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <ng-container *ngIf="!(isLoggedIn$ | async); else userLoggedIn">
+        <button mat-stroked-button class="login-button" (click)="openLoginDialog()">Se connecter</button>
+        <button mat-flat-button color="primary" class="register-button" (click)="openRegisterDialog()">S'inscrire</button>
+      </ng-container>
+      
+      <ng-template #userLoggedIn>
+        <button mat-icon-button class="notification-button" [matBadge]="unreadNotificationsCount$ | async" 
+                matBadgeColor="accent" [matBadgeHidden]="(unreadNotificationsCount$ | async) === 0"
+                [matMenuTriggerFor]="notificationsMenu" aria-label="Notifications">
+          <mat-icon>notifications</mat-icon>
+        </button>
+        
+        <button mat-button class="user-button" [matMenuTriggerFor]="userMenu">
+          <img *ngIf="(currentUser$ | async)?.profileImage" [src]="(currentUser$ | async)?.profileImage" class="user-avatar" alt="User avatar">
+          <mat-icon *ngIf="!(currentUser$ | async)?.profileImage">account_circle</mat-icon>
+          <span class="user-name">{{ (currentUser$ | async)?.firstName }}</span>
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        
+        <mat-menu #userMenu="matMenu">
+          <a mat-menu-item routerLink="/dashboard">
+            <mat-icon>dashboard</mat-icon>
+            <span>Tableau de bord</span>
+          </a>
+          <a mat-menu-item routerLink="/dashboard/favoris">
+            <mat-icon>favorite</mat-icon>
+            <span>Logements favoris</span>
+          </a>
+          <a mat-menu-item routerLink="/dashboard/profile">
+            <mat-icon>person</mat-icon>
+            <span>Mon profil</span>
+          </a>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Déconnexion</span>
+          </button>
+        </mat-menu>
+        
+        <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+          <div class="notifications-header">
+            <h3>Notifications</h3>
+            <button mat-button color="primary" class="mark-all-read" (click)="markAllAsRead()">Tout marquer comme lu</button>
+          </div>
+          <mat-divider></mat-divider>
+          
+          <div class="notifications-container">
+            <ng-container *ngIf="(notifications$ | async)?.length; else noNotifications">
+              <div *ngFor="let notification of notifications$ | async" class="notification-item" 
+                  [class.unread]="!notification.read" (click)="openNotification(notification)">
+                <mat-icon [class]="getNotificationIconClass(notification.type)">{{ getNotificationIcon(notification.type) }}</mat-icon>
+                <div class="notification-content">
+                  <h4>{{ notification.title }}</h4>
+                  <p>{{ notification.message }}</p>
+                  <span class="notification-time">{{ notification.createdAt | date:'short' }}</span>
+                </div>
+                <div class="notification-status" *ngIf="!notification.read"></div>
+              </div>
+            </ng-container>
+            
+            <ng-template #noNotifications>
+              <div class="no-notifications">
+                <mat-icon>notifications_off</mat-icon>
+                <p>Aucune notification</p>
+              </div>
+            </ng-template>
+          </div>
+          
+          <mat-divider></mat-divider>
+          <a mat-menu-item routerLink="/dashboard/notifications">
+            <mat-icon>list</mat-icon>
+            <span>Voir toutes les notifications</span>
+          </a>
+        </mat-menu>
+      </ng-template>
+    </div>
+  </div>
+</mat-toolbar>
